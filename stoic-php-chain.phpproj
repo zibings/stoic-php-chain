@@ -24,4 +24,7 @@
   <ItemGroup>
     <Folder Include="BaseClasses\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="composer.json" />
+  </ItemGroup>
 </Project>
