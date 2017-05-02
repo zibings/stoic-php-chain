@@ -19,7 +19,7 @@
 			return !empty($this->_key) && !empty($this->_version);
 		}
 
-		abstract public function process($sender, DispatchBase &$Dispatch);
+		abstract public function process($sender, DispatchBase &$dispatch);
 
 		public function setKey($key) {
 			$this->_key = $key;
