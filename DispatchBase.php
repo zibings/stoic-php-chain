@@ -40,7 +40,7 @@
 		}
 
 		public function isConsumed() {
-			return $this->isConsumed;
+			return $this->_isConsumed;
 		}
 
 		public function isStateful() {
@@ -65,7 +65,7 @@
 
 		protected function makeValid() {
 			$this->_calledDateTime = new \DateTime('now', new \DateTimeZone('UTC'));
-			$this->isValid = true;
+			$this->_isValid = true;
 
 			return $this;
 		}
