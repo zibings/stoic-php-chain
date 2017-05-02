@@ -14,7 +14,7 @@ class InvalidDispatch extends DispatchBase {
 
 class ValidDispatch extends DispatchBase {
 	public function initialize($input) {
-		$this->_isValid = true;
+		$this->makeValid();
 	}
 }
 
@@ -57,8 +57,10 @@ class DispatchTest extends TestCase {
 		$chainHelper->linkNode(new ValidNode());
 
 		$dispatch = new ValidDispatch();
+		$dispatch->initialize(null);
+
 		$shouldBeTrue = $chainHelper->traverse($dispatch);
 
-		$this->assertFalse($shouldBeTrue);
+		$this->assertTrue($shouldBeTrue);
 	}
 }
