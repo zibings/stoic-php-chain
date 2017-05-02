@@ -1,109 +1,101 @@
 <?php
-namespace Stoic\Chain\Tests;
 
-use PHPUnit\Framework\TestCase;
-use Stoic\Chain\ChainHelper;
-use Stoic\Chain\DispatchBase;
-use Stoic\Chain\NodeBase;
+	namespace Stoic\Chain\Tests;
 
-class IncrementDispatch extends DispatchBase {
-	public function initialize($input = array()) {
-		$this->makeValid();
-		$this->makeConsumable();
-	}
+	use PHPUnit\Framework\TestCase;
+	use Stoic\Chain\ChainHelper;
+	use Stoic\Chain\DispatchBase;
+	use Stoic\Chain\NodeBase;
 
-	public function increment($number = 0) {
-		$number++;
-
-		return $number;
-	}
-}
-
-class IncrementNode extends NodeBase {
-	public function __construct() {
-		$this->_key     = 'IncrementNode';
-		$this->_version = '1.0.0';
-	}
-
-	public function process($sender, DispatchBase &$dispatch) {
-		if (!($dispatch instanceof IncrementDispatch)) {
-			return;
+	class IncrementDispatch extends DispatchBase {
+		public function initialize($input = []) {
+			$this->makeValid();
+			$this->makeConsumable();
 		}
 
-		$results = $dispatch->getResults();
-		$number = $dispatch->increment($results[count($results)-1]['number']);
-		$dispatch->setResult(array(
-			'number' => $number
-		));
-	}
-}
+		public function increment($number = 0) {
+			$number++;
 
-class ConsumeNode extends NodeBase {
-	public function __construct() {
-		$this->_key = 'ConsumeNode';
-		$this->_version = '1.0.0';
+			return $number;
+		}
 	}
 
-	public function process($sender, DispatchBase &$dispatch) {
-		$dispatch->consume();
-	}
-}
+	class IncrementNode extends NodeBase {
+		public function __construct() {
+			$this->_key     = 'IncrementNode';
+			$this->_version = '1.0.0';
+		}
 
-class ChainTest extends TestCase {
-	public function test_chainExecution() {
-		$chainHelper = new ChainHelper();
-		$chainHelper
-			->linkNode(new IncrementNode())
-			->linkNode(new IncrementNode())
-			->linkNode(new IncrementNode());
+		public function process($sender, DispatchBase &$dispatch) {
+			if (!($dispatch instanceof IncrementDispatch)) {
+				return;
+			}
 
-		$dispatch = new IncrementDispatch();
-		$dispatch->initialize();
-
-		$isChainSuccessful = $chainHelper->traverse($dispatch);
-		$results = $dispatch->getResults();
-
-		$this->assertTrue($isChainSuccessful);
-		$this->assertCount(1, $results);
-		$this->assertCount(3, $chainHelper->getNodeList());
-		$this->assertEquals(3, isset($results[0]['number']) ? $results[0]['number'] : 0);
+			$results = $dispatch->getResults();
+			$number  = $dispatch->increment($results[count($results) - 1]['number']);
+			$dispatch->setResult([
+				'number' => $number,
+			]);
+		}
 	}
 
-	public function test_dispatchCanBeConsumed() {
-		$chainHelper = new ChainHelper();
-		$chainHelper
-			->linkNode(new IncrementNode())
-			->linkNode(new ConsumeNode())
-			->linkNode(new IncrementNode());
+	class ConsumeNode extends NodeBase {
+		public function __construct() {
+			$this->_key     = 'ConsumeNode';
+			$this->_version = '1.0.0';
+		}
 
-		$dispatch = new IncrementDispatch();
-		$dispatch->initialize();
-
-		$chainHelper->traverse($dispatch);
-		$results = $dispatch->getResults();
-
-		$this->assertTrue($dispatch->isConsumable());
-		$this->assertTrue($dispatch->isConsumed());
-		$this->assertEquals(1, isset($results[0]['number']) ? $results[0]['number'] : 0);
+		public function process($sender, DispatchBase &$dispatch) {
+			$dispatch->consume();
+		}
 	}
 
-	public function test_dispatchHoldsStates() {
-		$chainHelper = new ChainHelper();
-		$chainHelper
-			->linkNode(new IncrementNode())
-			->linkNode(new IncrementNode())
-			->linkNode(new IncrementNode());
+	class ChainTest extends TestCase {
+		public function test_chainExecution() {
+			$chainHelper = new ChainHelper();
+			$chainHelper->linkNode(new IncrementNode())->linkNode(new IncrementNode())->linkNode(new IncrementNode());
 
-		$dispatch = new IncrementDispatch();
-		$dispatch->makeStateful();
-		$dispatch->initialize();
+			$dispatch = new IncrementDispatch();
+			$dispatch->initialize();
 
-		$chainHelper->traverse($dispatch);
-		$results = $dispatch->getResults();
+			$isChainSuccessful = $chainHelper->traverse($dispatch);
+			$results           = $dispatch->getResults();
 
-		$this->assertCount(3, $results);
-		$this->assertEquals(1, isset($results[0]['number']) ? $results[0]['number'] : 0);
-		$this->assertEquals(2, isset($results[1]['number']) ? $results[1]['number'] : 0);
-		$this->assertEquals(3, isset($results[2]['number']) ? $results[2]['number'] : 0);
+			$this->assertTrue($isChainSuccessful);
+			$this->assertCount(1, $results);
+			$this->assertCount(3, $chainHelper->getNodeList());
+			$this->assertEquals(3, isset($results[0]['number']) ? $results[0]['number'] : 0);
+		}
+
+		public function test_dispatchCanBeConsumed() {
+			$chainHelper = new ChainHelper();
+			$chainHelper->linkNode(new IncrementNode())->linkNode(new ConsumeNode())->linkNode(new IncrementNode());
+
+			$dispatch = new IncrementDispatch();
+			$dispatch->initialize();
+
+			$chainHelper->traverse($dispatch);
+			$results = $dispatch->getResults();
+
+			$this->assertTrue($dispatch->isConsumable());
+			$this->assertTrue($dispatch->isConsumed());
+			$this->assertEquals(1, isset($results[0]['number']) ? $results[0]['number'] : 0);
+		}
+
+		public function test_dispatchHoldsStates() {
+			$chainHelper = new ChainHelper();
+			$chainHelper->linkNode(new IncrementNode())->linkNode(new IncrementNode())->linkNode(new IncrementNode());
+
+			$dispatch = new IncrementDispatch();
+			$dispatch->makeStateful();
+			$dispatch->initialize();
+
+			$chainHelper->traverse($dispatch);
+			$results = $dispatch->getResults();
+
+			$this->assertCount(3, $results);
+			$this->assertEquals(1, isset($results[0]['number']) ? $results[0]['number'] : 0);
+			$this->assertEquals(2, isset($results[1]['number']) ? $results[1]['number'] : 0);
+			$this->assertEquals(3, isset($results[2]['number']) ? $results[2]['number'] : 0);
+		}
 	}
-}
