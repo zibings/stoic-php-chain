@@ -17,13 +17,11 @@
   <ItemGroup>
     <Compile Include=".gitignore" />
     <Compile Include="README.md" />
-    <Compile Include="Stoic\Chain\BaseClasses\DispatchBase.php" />
-    <Compile Include="Stoic\Chain\BaseClasses\NodeBase.php" />
-    <Compile Include="Stoic\Chain\ChainHelper.php" />
+    <Compile Include="BaseClasses\DispatchBase.php" />
+    <Compile Include="BaseClasses\NodeBase.php" />
+    <Compile Include="ChainHelper.php" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Stoic\" />
-    <Folder Include="Stoic\Chain\" />
-    <Folder Include="Stoic\Chain\BaseClasses\" />
+    <Folder Include="BaseClasses\" />
   </ItemGroup>
 </Project>
