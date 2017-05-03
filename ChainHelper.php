@@ -11,7 +11,7 @@
 
 		public function __construct($isEvent = false, $doDebug = false) {
 			$this->_isEvent = $isEvent;
-			$this->_doDebug = $doDebug;
+			$this->toggleDebug($doDebug);
 
 			return;
 		}
