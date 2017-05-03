@@ -11,6 +11,13 @@
 		private $_calledDateTime;
 
 
+		public function __toString() {
+			return static::class . "{ \"calledDateTime\": \"{$this->_calledDateTime}\", " .
+				"\"isConsumable\": \"{$this->_isConsumable}\", " .
+				"\"isStateful\": \"{$this->_isStateful}\", " .
+				"\"isConsumed\": \"{$this->_isConsumed}\" }";
+		}
+		
 		public function consume() {
 			if ($this->_isConsumable && !$this->_isConsumed) {
 				$this->_isConsumed = true;
