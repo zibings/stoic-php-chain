@@ -21,6 +21,7 @@
     <Compile Include="NodeBase.php" />
     <Compile Include="ChainHelper.php" />
     <Compile Include="Tests\ChainTest.php" />
+    <Compile Include="Tests\LoggingTest.php" />
     <Compile Include="Tests\ValidityTest.php" />
   </ItemGroup>
   <ItemGroup>

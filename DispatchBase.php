@@ -12,7 +12,7 @@
 
 
 		public function __toString() {
-			return static::class . "{ \"calledDateTime\": \"{$this->_calledDateTime}\", " .
+			return static::class . "{ \"calledDateTime\": \"" . $this->_calledDateTime->format("Y-m-d G:i:s") . "\", " .
 				"\"isConsumable\": \"{$this->_isConsumable}\", " .
 				"\"isStateful\": \"{$this->_isStateful}\", " .
 				"\"isConsumed\": \"{$this->_isConsumed}\" }";

@@ -35,11 +35,7 @@
 			return $ret;
 		}
 
-		public function hookLogger($callback) {
-			if ($callback === null || !is_callable($callback)) {
-				return false;
-			}
-
+		public function hookLogger(callable $callback) {
 			$this->_logger = $callback;
 
 			return true;
@@ -137,7 +133,7 @@
 
 		protected function log($message) {
 			if ($this->_logger !== null) {
-				$this->_logger($message);
+				call_user_func($this->_logger, $message);
 			}
 
 			return;
