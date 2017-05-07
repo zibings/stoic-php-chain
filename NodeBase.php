@@ -7,6 +7,10 @@
 		protected $_version = null;
 
 
+		public function __toString() {
+			return static::class . "{ \"key\": \"{$this->_key}\", \"version\": \"{$this->_version}\" }";
+		}
+
 		public function getKey() {
 			return $this->_key;
 		}
