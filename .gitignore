@@ -251,6 +251,10 @@ paket-files/
 .idea/
 *.sln.iml
 
+# VS Proj/Sln
+*.sln
+*.phpproj
+
 # Composer files
 composer.lock
 vendor/
